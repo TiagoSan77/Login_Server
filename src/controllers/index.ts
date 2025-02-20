@@ -2,6 +2,7 @@ import e, { Router, Request, Response } from "express";
 import { User } from "../models";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { SECRET } from "../config";
 
 // Adicione o parâmetro "next" (mesmo não sendo usado)
 export const login = async (req: Request, res: Response, next: any) => {
@@ -17,7 +18,7 @@ export const login = async (req: Request, res: Response, next: any) => {
             res.status(401).json({ message: "Invalid email or password" });
             return;
         }
-        const token = jwt.sign({ id: user._id }, "your_secret_key", { expiresIn: "1h" });
+        const token = jwt.sign({ id: user._id },SECRET, { expiresIn: "1h" });
         res.json({ email,password,token });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao fazer login', error });
