@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
+import { SECRET } from "../config";
 
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +12,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
         }
         const [, token] = authorization.split(" ");
         try {
-            jwt.verify(token, "@tokenJWT");
+            jwt.verify(token, SECRET);
             console.log('Usuario autenticado')
             next();
         } catch (error) {

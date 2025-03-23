@@ -1,11 +1,14 @@
-import e, { Router, Request, Response } from "express";
+import { Request, Response } from "express";
 import { User } from "../models";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { SECRET } from "../config";
 
-// Adicione o parâmetro "next" (mesmo não sendo usado)
-export const login = async (req: Request, res: Response, next: any) => {
+
+
+class UserController {
+
+public async login(req: Request, res: Response, next: any):Promise<void> {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -23,10 +26,10 @@ export const login = async (req: Request, res: Response, next: any) => {
     } catch (error) {
         res.status(500).json({ message: 'Erro ao fazer login', error });
     }
-};
+}
 
-class UserController {
-    public async create(req: Request, res: Response) {
+
+    public async create(req: Request, res: Response):Promise<void> {
         try {
             const { name, email, password } = req.body;
             const passwordHash = await bcrypt.hash(password, 10);
@@ -37,7 +40,7 @@ class UserController {
             res.status(500).json({ message: 'Erro ao criar usuário', error });
         }
     }
-    public async read(req: Request, res: Response) {
+    public async read(req: Request, res: Response):Promise<void> {
         try {
             const users = await User.find();
             res.json(users);
@@ -46,7 +49,7 @@ class UserController {
         }
     }
 
-    public async update(req: Request, res: Response) {
+    public async update(req: Request, res: Response):Promise<void> {
         try {
             const id = req.params.id;
             const { name, email, password } = req.body;
@@ -57,7 +60,7 @@ class UserController {
         }
     }
 
-    public async delete(req: Request, res: Response) {
+    public async delete(req: Request, res: Response):Promise<void> {
         try {
             const { id } = req.params;
             const user = await User.findByIdAndDelete(id);
@@ -68,5 +71,5 @@ class UserController {
     }
 
 }
-const user: any = new UserController();
+const user = new UserController();
 export default user;
