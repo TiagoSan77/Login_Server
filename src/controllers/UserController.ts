@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../models";
+import { User } from "../models/UserScheme";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { SECRET } from "../config";
-
-
 
 class UserController {
 
@@ -35,7 +33,7 @@ public async login(req: Request, res: Response, next: any):Promise<void> {
             const passwordHash = await bcrypt.hash(password, 10);
             const newUser = new User({ name, email, password: passwordHash });
             await newUser.save();
-            res.status(201).json(newUser);
+            res.status(201).json('Usuario criado com sucesso!');
         } catch (error) {
             res.status(500).json({ message: 'Erro ao criar usuário', error });
         }
