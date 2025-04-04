@@ -21,7 +21,8 @@ public async login(req: Request, res: Response, next: any):Promise<void> {
         }
         const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: "1h" });
         res.setHeader("Authorization",`${token}`);
-        res.json({email,password});
+        // res.json({email,password});
+        res.status(200).json({ message: "Usuario logado com sucesso" });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao fazer login', error });
     }
