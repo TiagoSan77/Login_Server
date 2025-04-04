@@ -16,7 +16,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
             console.log('Usuario autenticado')
             next();
         } catch (error) {
-            res.status(401).json({ message: "Token expired" });
+            res.status(401).json(  { message: "Token expired" });
         }
     } catch (error) {
         res.status(500).json({ message: 'Erro ao autenticar', error });

@@ -20,7 +20,8 @@ public async login(req: Request, res: Response, next: any):Promise<void> {
             return;
         }
         const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: "1h" });
-        res.json({ email, password, token });
+        res.setHeader("Authorization",`${token}`);
+        res.json({email,password});
     } catch (error) {
         res.status(500).json({ message: 'Erro ao fazer login', error });
     }
@@ -29,19 +30,23 @@ public async login(req: Request, res: Response, next: any):Promise<void> {
 
     public async create(req: Request, res: Response):Promise<void> {
         try {
-            const { name, email, password } = req.body;
+            const { name, email, password,role,numero } = req.body;
             const passwordHash = await bcrypt.hash(password, 10);
-            const newUser = new User({ name, email, password: passwordHash });
+            const newUser = new User({ name, email, password: passwordHash ,role,numero});
             await newUser.save();
-            res.status(201).json('Usuario criado com sucesso!');
-        } catch (error) {
-            res.status(500).json({ message: 'Erro ao criar usuário', error });
+            res.status(201).json(newUser);
+            //res.status(201).json('Usuario criado com sucesso!');
+        } catch (error:any) {
+            if (error.name === "ValidationError") {
+                const mensagens = Object.values(error.errors).map((err: any) => err.message);
+                 res.status(400).json({ message: "Erro ao criar usuário", errors: mensagens });
+              }
         }
     }
     public async read(req: Request, res: Response):Promise<void> {
         try {
             const users = await User.find();
-            res.json(users);
+            res.json(users); 
         } catch (error) {
             res.status(500).json({ message: 'Erro ao obter usuários', error });
         }
